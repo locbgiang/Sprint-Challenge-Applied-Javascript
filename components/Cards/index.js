@@ -17,3 +17,45 @@
 // </div>
 //
 // Create a card for each of the articles and add the card to the DOM.
+
+function articleCard (object){
+    const card = document.createElement('div');
+        const headline = document.createElement('div');
+        const author = document.createElement('div');
+            const imgContainer = document.createElement('div');
+                const image = document.createElement('img');
+            const authorName = document.createElement('span');
+
+    card.classList.add('card');
+    headline.classList.add('headline');
+    author.classList.add('author');
+    imgContainer.classList.add('img-container');
+
+    image.setAttribute('src', object.authorPhoto);
+    authorName.textContent = object.authorName;
+    headline.textContent = object.headline;
+
+
+    card.append(headline, author);
+    author.append(imgContainer,authorName);
+    imgContainer.append(image);
+
+    return card;
+}
+
+const entryCard = document.querySelector('.cards-container');
+
+axios.get('https://lambda-times-backend.herokuapp.com/articles').then(response=>{
+    //console.log(Object.values(response.data.articles)[0]);
+    //console.log(response);
+    //console.log(Object.values(Object.values(response.data.articles)[0])[0]);
+    for(let i=0; i<Object.keys(response.data.articles).length; i++){
+        for(let j=0; j<Object.values(response.data.articles)[i].length; j++){
+            entryCard.append(articleCard(Object.values(Object.values(response.data.articles)[i])[j]));
+        }
+    }
+    //entryCard.append(articleCard(Object.values(Object.values(response.data.articles)[0])[0]))
+})
+.catch(error => {
+    console.log("the data was not returned", error)
+})
